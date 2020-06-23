@@ -94,9 +94,9 @@ void qsortX(char *a[],int l,int r)
 		j = r;
 		while(i < j)
 		{
-			while(strcmp(a[i],pivot) < 0 && i<r)
+			while(strlen(a[i]) <= strlen(pivot) && i<=r)
 				i++;
-			while(strcmp(a[j],pivot) >= 0)
+			while(strlen(a[j]) > strlen(pivot))
 				j--;
 			if(i < j)
 			{
