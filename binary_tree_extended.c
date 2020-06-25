@@ -2,6 +2,7 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
+
 #define MAXWORD			100
 #define BUFFSIZE		 20
 #define YES				  1
@@ -110,68 +111,23 @@ int getword(char *word,int lim)
 	{
 		*w++ = c;
 	}
-	if(isalpha(c) || c == '_' || c == '#')
+	if(!isalpha(c))
 	{
-		for(;--lim > 0;w++)
-		{
-			if(!isalnum(*w = getchX()) && *w != '_')
-			{
-				ungetchX(*w);
-				break;
-			}
-		}
+		*w = '\0';
+		return c;
 	}
-	else if(c == '\'' || c == '"')
+	while(--lim > 0)
 	{
-		for(;--lim > 0;w++)
+		if(!isalnum(*w = getchX()))
 		{
-			if((*w = getchX()) == '\\')
-			{
-				*w++ = getchX();
-			}
-			else if(*w == c)
-			{
-				w++;
-				break;
-			}
-			else if(*w == EOF)
-			{
-				break;
-			}
+			ungetchX(*w);
+			break;
 		}
-	}
-	else if (c == '/')
-	{
-		if((d = getchX()) == '*')
-		{
-			c = comment();
-		}
-		else
-		{
-			ungetchX(d);
-		}
+		w++;
 	}
 	*w = '\0';
-	return c;
+	return word[0];
 }
-
-
-int comment()
-{
-	int c;
-	while((c = getchX()) != EOF)
-	{
-		if(c == '*')
-		{
-			if((c = getchX()) == '/')
-				break;
-			else
-				ungetchX(c);
-		}
-	}
-	return c;
-}
-
 
 TNODE *t_alloc()
 {

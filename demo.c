@@ -1,13 +1,10 @@
 #include<stdio.h>
-#include<stdlib.h>
 #include<ctype.h>
 #include<string.h>
-#include<fcntl.h>
 
 #define NKEY	(sizeof keytab / sizeof(keytab[0]))
 #define MAXWORD 	100
 #define BUFFSIZE 	 10
-#define BLOCSIZE 	512
 
 typedef struct key
 {
@@ -20,61 +17,52 @@ KEY keytab[] = { {"auto",0},{"break",0},{"case",0},{"char",0},{"const",0},{"cont
 			  {"int",0},{"long",0},{"main",0},{"signed",0},{"struct",0},{"unsigned",0},
 			  {"void",0},{"volatile",0},{"while",0}
 			};
-int  bufp = 0;
-int  buf[BUFFSIZE];
-int  getchX();
+int bufp = 0;
+int buf[BUFFSIZE];
+int getchX();
 void ungetchX(int c);
-int  getword(char*,char*,int);
-int  bsearchX(char*,KEY*,int);
+int getword(char*,int);
+int bsearch(char*,KEY*,int);
+int comment();
 
-
-int main(int argc,char **argv)
+int main()
 {
-	printf("Inside main\n");
-	if(argc != 2)
+	printf("Inside main()\n");
+	int n;
+	char word[MAXWORD];
+	while(getword(word,NKEY) != EOF)
 	{
-		printf("Its different I require a file\n");
-		return 0;
-	}
-	int n ,fd = 0,iRet = 0,i = 0,lim = 0;
-
-	char* fbuff = (char*)malloc(sizeof(char)*BLOCSIZE);
-	char* word = (char*)malloc(sizeof(char)*MAXWORD);
-	char* str = (char*)malloc(sizeof(char)*MAXWORD);
-
-	fd = open(argv[1],O_RDONLY);
-	printf("file opened with fd %d\n",fd);
-
-	while((iRet = read(fd,fbuff,BLOCSIZE)) > 0)
-	{
-		printf("%d\n",iRet);
-		while(iRet > 0)
+		if(isalpha(word[0]))
 		{
-			sscanf(fbuff,"%s",word);
-			i = strlen(word);
-			/*if(i > 2)
+			if((n = bsearch(word,keytab,NKEY)) >= 0)
 			{
-				if(isalpha(word[0]))
-				{
-					if((n = bsearchX(word,keytab,NKEY)) >= 0)
-					{
-						keytab[n].count++;
-					}
-				}			
-			}*/
-			fbuff = fbuff + i;
-			iRet = iRet - i;		
+				keytab[n].count++;
+			}
 		}
 	}
-	for(i = 0; i < NKEY ; i++)
+	for(n = 0; n < NKEY ; n++)
 	{
-		if(keytab[i].count > 0)
+		if(keytab[n].count > 0)
 		{
-			printf("%4d %s\n",keytab[i].count , keytab[i].word);
+			printf("%4d %s\n",keytab[n].count , keytab[n].word);
 		}
 	}
-	close(fd);
 	return 0;
+}
+
+int getchX()
+{
+	return (bufp > 0) ? buf[--bufp] : getchar();
+}
+
+void ungetchX(int c)
+{
+	if(bufp >= BUFFSIZE)
+	{
+		printf("Ungetch :too many arg\n");
+	}
+	else 
+		buf[bufp++] = c;
 }
 
 /*
@@ -82,7 +70,7 @@ int main(int argc,char **argv)
 * input			:char*,struct key*,int
 * output		:int
 */
-int bsearchX(char *word,KEY* tab,int n)
+int bsearch(char *word,KEY* tab,int n)
 {
 	int beg = 0,end = n - 1,mid = 0,condition = 0;
 	while(beg <= end)
@@ -100,4 +88,82 @@ int bsearchX(char *word,KEY* tab,int n)
 			return mid;
 	}
 	return -1;
+}
+/*
+* getword()		:get next word or character from input format it properly 
+* input			:char*,int
+* output		:int
+*/
+int getword(char *word,int lim)
+{
+	printf("Inside getword()\n");
+	int c,d;
+	char *w = word;
+	
+	while(isspace(c = getchX()))
+		;
+	if(c != EOF)
+	{
+		*w++ = c;
+	}
+	if(!isalpha(c) || c == '_' || c == '#')
+	{
+		printf("Inside '_' '#'()\n");
+		for(;--lim > 0;w++)
+		{
+			printf("Inside for it 1()\n");
+			if(!isalnum(*w = getchX()) && *w != '_')
+			{
+				ungetchX(*w);
+				break;
+			}
+		}
+	}
+	else if(c == '\'' || c == '"')
+	{
+		printf("Inside  '\' '\"'()\n");
+		for(;--lim > 0;w++)
+		{
+			printf("Inside for it 2\n");
+			if((*w = getchX()) == '\\')
+			{
+				*w++ = getchX();
+			}
+			else if(*w == c)
+			{
+				w++;
+				break;
+			}
+			else if(*w == EOF)
+				break;
+		}
+	}
+	else if (c == '/')
+	{
+		printf("Inside comments / start\n");
+		if((d = getchX()) == '*')
+			c = comment();
+		else
+			ungetchX(d);
+	}
+
+	*w = '\0';
+	return c;
+}
+
+int comment()
+{
+	printf("Inside comment())\n");
+	int c;
+	while((c = getchX()) != EOF)
+	{
+		if(c == '*')
+		{
+			if((c = getchX()) == '/')
+				break;
+			else
+				ungetchX(c);
+		}
+	}
+	return c;
 }

@@ -5,31 +5,20 @@
 #define MAXTOKEN	100
 #define BUFFSIZE 	100
 
-enum {NAME,PARENS,BRACKETS};
-enum {NO,YES};
-
 char buf[BUFFSIZE];
-int  bufp = 0;
+int bufp = 0;
+
+enum {NAME,PARENS,BRACKETS};
 void dirdcl();
 void dcl();
-int  gettoken();
-int  tokentype;
+int gettoken();
+int tokentype;
 char token[MAXTOKEN];
 char name[MAXTOKEN];
 char datatype[MAXTOKEN];
 char out[1000];
 void ungetchX(int c);
-int  getchX();
-
-int  prevtoken = NO;
-int  nexttoken()
-{
-	int type;
-	extern int prevtoken;
-	type = gettoken();
-	prevtoken = YES;
-	return  type;
-}
+int getchX();
 
 void dcl()
 {
@@ -57,20 +46,16 @@ void ungetchX(int c)
 void dirdcl()
 {
 	int type;
-	if(tokentype == '(')
+	if(tokentype == '{')
 	{
 		dcl();
-		if(tokentype != ')')
-			printf("Error : missing )\n");
+		if(tokentype != '}')
+			printf("Error : missing }\n");
 	}
 	else if(tokentype == NAME)
-	{
 		strcpy(name,token);
-	}
 	else
-	{
 		printf("Error:Expected name or (dcl)\n");
-	}
 
 	while((type = gettoken()) == PARENS || type == BRACKETS)
 	{
@@ -84,8 +69,7 @@ void dirdcl()
 		}
 	}
 }
-
-void declaration_to_word()
+int main()
 {
 	while(gettoken() != EOF)
 	{
@@ -95,22 +79,20 @@ void declaration_to_word()
 		if(tokentype != '\n')
 			printf("Syntax Error\n");
 		printf("%s : %s %s\n",name,out,datatype);
-	}	
+	}
+	return 0;
 }
 
 int gettoken()
 {
 	int c;
 	char *p = token;
-	if(prevtoken == YES)
-	{
-		prevtoken = NO;
-		return tokentype;
-	}
+
 	while((c = getchX()) == ' ' || c == '\t')
 		;
 	if(c == '(')
 	{
+		printf("is (\n");
 		if((c = getchX()) == ')')
 		{
 	 		strcpy(token,"()");
@@ -119,61 +101,31 @@ int gettoken()
 		else
 		{
 			ungetchX(c);
-			return tokentype = '(';
+			return tokentype = '{';
 		}
 	}
 	else if(c == '[')
 	{
-		for(*p++ = c; (*p++ = getchX()) != ']';)
+		printf("is [\n");
+
+	 	for(*p++ = c; (*p++ = getchX()) != ']';)
 	 		;
 	 	*p = '\0';
 	 	return tokentype = BRACKETS;
 	} 
 	else if(isalpha(c)) /* is alphabet or not*/
 	{ 
+		printf("Alphabetical\n");
 	 	for(*p++ = c; isalnum(c = getchX());)/* is alphanumeric or not*/
 	 	{
+	 		printf("is alphanumeric\n");
 	 		*p++ = c;
-	 	}		
+	 	}
+		
 		*p = '\0';
 		ungetchX(c);
 		return tokentype = NAME;
 	}
 	else
 		return tokentype = c;
-}
-
-int main()
-{
-	int type;
-	char temp[MAXTOKEN];
-
-	while(gettoken() != EOF)
-	{
-		strcpy(out,token);
-		while((type = gettoken()) !='\n')
-		{
-			if(type == PARENS || type == BRACKETS)
-				strcat(out,token);
-			else if(type == '*')
-			{
-				if((type = nexttoken()) == PARENS || type == BRACKETS)
-					sprintf(temp,"*(%s)",out);
-				else
-					sprintf(temp,"*%s",out);
-				strcpy(out,temp);
-			}
-			else if(type == NAME)
-			{
-				sprintf(temp,"%s %s",token,out);
-				strcpy(out,temp);
-			}
-			else
-			{
-				printf("Invalid input at %s\n",token);
-			}
-		}
-		printf("%s\n", out);
-	}
-	return 0;
 }

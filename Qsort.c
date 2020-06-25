@@ -46,7 +46,7 @@ void qsort(int a[],int l,int r)
 		j = r;
 		while(i < j)
 		{
-			while(a[i] <= pivot && i <= r)
+			while(a[i] <= pivot && i<r)
 				i++;
 			while(a[j] > pivot)
 				j--;
