@@ -23,13 +23,14 @@ int getchX();
 void ungetchX(int c);
 int getword(char*,int);
 int bsearch(char*,KEY*,int);
-
+int comment();
 
 int main()
 {
 	int n;
 	char word[MAXWORD];
-	while(getword(word,NKEY) != EOF)
+	
+	while(getword(word,MAXWORD) != EOF)
 	{
 		if(isalpha(word[0]))
 		{
@@ -95,7 +96,7 @@ int bsearch(char *word,KEY* tab,int n)
 */
 int getword(char *word,int lim)
 {
-	int c;
+	int c,d;
 	char *w = word;
 
 	while(isspace(c = getchX()))
@@ -104,19 +105,58 @@ int getword(char *word,int lim)
 	{
 		*w++ = c;
 	}
-	if(!isalpha(c))
+	if(!isalpha(c) || c == '_' || c == '#')
 	{
-		*w = '\0';
-		return c;
-	}
-	for(;--lim > 0;w++)
-	{
-		if(!isalnum(*w = getchX()))
+		for(;--lim > 0;w++)
 		{
-			ungetchX(*w);
-			break;
+			if(!isalnum(*w = getchX()) && *w != '_')
+			{
+				ungetchX(*w);
+				break;
+			}
 		}
 	}
+	else if(c == '\'' || c == '"')
+	{
+		for(;--lim > 0;w++)
+		{
+			if((*w = getchX()) == '\\')
+			{
+				*w++ = getchX();
+			}
+			else if(*w == c)
+			{
+				w++;
+				break;
+			}
+			else if(*w == EOF)
+				break;
+		}
+	}
+	else if (c == '/')
+	{
+		if((d = getchX()) == '*')
+			c = comment();
+		else
+			ungetchX(d);
+	}
+
 	*w = '\0';
-	return word[0];
+	return c;
+}
+
+int comment()
+{
+	int c;
+	while((c = getchX()) != EOF)
+	{
+		if(c == '*')
+		{
+			if((c = getchX()) == '/')
+				break;
+			else
+				ungetchX(c);
+		}
+	}
+	return c;
 }

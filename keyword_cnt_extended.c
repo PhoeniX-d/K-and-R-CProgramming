@@ -96,24 +96,26 @@ int bsearch(char *word,KEY* tab,int n)
 */
 int getword(char *word,int lim)
 {
-	printf("Inside getword()\n");
 	int c,d;
 	char *w = word;
-	
+	printf("%d\n",__LINE__);
 	while(isspace(c = getchX()))
 		;
+	printf("%c\n",c);
 	if(c != EOF)
 	{
 		*w++ = c;
+		printf("here w++ %c\n",*w);
 	}
+	printf("%c\n",c);	
 	if(isalpha(c) || c == '_' || c == '#')
 	{
-		printf("Inside '_' '#'()\n");
+		printf("%d\n",__LINE__);
 		for(;--lim > 0;w++)
 		{
-			printf("Inside for it 1()\n");
 			if(!isalnum(*w = getchX()) && *w != '_')
 			{
+				printf("%d\n",__LINE__);
 				ungetchX(*w);
 				break;
 			}
@@ -121,36 +123,48 @@ int getword(char *word,int lim)
 	}
 	else if(c == '\'' || c == '"')
 	{
-		printf("Inside  '\' '\"'()\n");
+		printf("%d\n",__LINE__);
 		for(;--lim > 0;w++)
 		{
-			printf("Inside for it 2\n");
 			if((*w = getchX()) == '\\')
 			{
+				printf("%d\n",__LINE__);
 				*w++ = getchX();
 			}
 			else if(*w == c)
 			{
+				printf("%c\n",*w);
+				printf("%c\n",c);
+				printf("%d\n",__LINE__);
 				w++;
 				break;
 			}
 			else if(*w == EOF)
+			{
+				printf("%d\n",__LINE__);
 				break;
+			}
+			printf("%d\n",__LINE__);
 		}
 	}
 	else if (c == '/')
 	{
-		printf("Inside comments / start\n");
+		printf("%d\n",__LINE__);
 		if((d = getchX()) == '*')
+		{
+			printf("%d\n",__LINE__);
 			c = comment();
+			printf("%c\n",c);
+		}
 		else
+		{
+			printf("%d\n",__LINE__);
 			ungetchX(d);
+		}
 	}
-
 	*w = '\0';
 	return c;
 }
-
 int comment()
 {
 	printf("Inside comment())\n");
