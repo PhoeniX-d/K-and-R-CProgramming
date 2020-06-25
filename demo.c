@@ -1,117 +1,103 @@
 #include<stdio.h>
-#include<string.h>
 #include<stdlib.h>
+#include<ctype.h>
+#include<string.h>
+#include<fcntl.h>
 
-#define MAXLINES		1000
-#define MAXLEN 			 100
+#define NKEY	(sizeof keytab / sizeof(keytab[0]))
+#define MAXWORD 	100
+#define BUFFSIZE 	 10
+#define BLOCSIZE 	512
 
-char *lineptr[MAXLINES];
-
-int readlines(char *lineptr[],int nlines);
-void writelines(char *lineptr[],int nlines);
-int getlinex(char *);
-void qsortX(char *a[],int left,int right);
-
-int main()
+typedef struct key
 {
-	printf("Inside main()\n");
-	int nlines;
-	if((nlines = readlines(lineptr,MAXLINES)) >=0)
+	char*	word;
+	int		count;	
+}KEY;
+
+KEY keytab[] = { {"auto",0},{"break",0},{"case",0},{"char",0},{"const",0},{"continue",0},
+			  {"default",0},{"define",0},{"do",0},{"enum",0},{"float",0},{"for",0},
+			  {"int",0},{"long",0},{"main",0},{"signed",0},{"struct",0},{"unsigned",0},
+			  {"void",0},{"volatile",0},{"while",0}
+			};
+int  bufp = 0;
+int  buf[BUFFSIZE];
+int  getchX();
+void ungetchX(int c);
+int  getword(char*,char*,int);
+int  bsearchX(char*,KEY*,int);
+
+
+int main(int argc,char **argv)
+{
+	printf("Inside main\n");
+	if(argc != 2)
 	{
-		qsortX(lineptr,0,nlines - 1);
-		writelines(lineptr,nlines);
+		printf("Its different I require a file\n");
 		return 0;
 	}
-	else
-	{
-		printf("input too big\n");
-		return 1;
-	}
-}
+	int n ,fd = 0,iRet = 0,i = 0,lim = 0;
 
-int getlinex(char *s)
-{
-	printf("Inside getlinex()\n");
-	int c = 0,i = 0;
-	 while(i < MAXLEN -1 && (c = getchar()) != EOF && c !='\n')
-	 {
-	 	*(s + i) = c;
-	 	i++;
-	 }
-	 if(c == '\n')
-	 {
-	 	*(s + i) = c;
-	 	i++;
-	 }
-	 *(s + i) = '\0';
-	 return i;
-}
-int readlines(char *lineptr[],int maxlines)
-{
-	printf("Inside readlines()\n");
-	int len,nlines;
-	char *p = NULL;
-	char line[MAXLEN];
+	char* fbuff = (char*)malloc(sizeof(char)*BLOCSIZE);
+	char* word = (char*)malloc(sizeof(char)*MAXWORD);
+	char* str = (char*)malloc(sizeof(char)*MAXWORD);
 
-	nlines = 0;
-	while((len = getlinex(line)) > 0)
+	fd = open(argv[1],O_RDONLY);
+	printf("file opened with fd %d\n",fd);
+
+	while((iRet = read(fd,fbuff,BLOCSIZE)) > 0)
 	{
-		if(nlines >= maxlines || (p = (char*)malloc(len * sizeof(char))) == NULL)
+		printf("%d\n",iRet);
+		while(iRet > 0)
 		{
-			return -1;
+			sscanf(fbuff,"%s",word);
+			i = strlen(word);
+			/*if(i > 2)
+			{
+				if(isalpha(word[0]))
+				{
+					if((n = bsearchX(word,keytab,NKEY)) >= 0)
+					{
+						keytab[n].count++;
+					}
+				}			
+			}*/
+			fbuff = fbuff + i;
+			iRet = iRet - i;		
+		}
+	}
+	for(i = 0; i < NKEY ; i++)
+	{
+		if(keytab[i].count > 0)
+		{
+			printf("%4d %s\n",keytab[i].count , keytab[i].word);
+		}
+	}
+	close(fd);
+	return 0;
+}
+
+/*
+* bsearch()		:binary search performed on keytab for finding word passed 
+* input			:char*,struct key*,int
+* output		:int
+*/
+int bsearchX(char *word,KEY* tab,int n)
+{
+	int beg = 0,end = n - 1,mid = 0,condition = 0;
+	while(beg <= end)
+	{
+		mid = (beg + end)/2;
+		if((condition = strcmp(word,tab[mid].word)) < 0)
+		{
+			end = mid - 1;
+		}
+		else if(condition > 0)
+		{
+			beg = mid + 1;
 		}
 		else
-		{
-			line[len - 1] = '\0';
-			strcpy(p,line);
-			lineptr[nlines++] = p;
-		}
+			return mid;
 	}
-
-	return nlines;
-}
-
-void writelines(char *lineptr[],int maxlines)
-{
-	printf("Inside writelines()\n");
-	for(int i = 0;i<maxlines;i++)
-	{
-		printf("%s\n",lineptr[i]);
-	}
-}
-
-void qsortX(char *a[],int l,int r)
-{
-	printf("Inside qsortX()\n");
-
-	int i,j;
-	char *temp = NULL,*pivot = NULL;
-	if(l < r)
-	{
-		pivot = a[l];
-
-		i = l;
-		j = r;
-		while(i < j)
-		{
-			while(strcmp(a[i],pivot) < 0 && i<r)
-				i++;
-			while(strcmp(a[j],pivot) >= 0)
-				j--;
-			if(i < j)
-			{
-				temp = a[i];
-				a[i] = a[j];
-				a[j] = temp;
-			}
-		}
-
-
-		temp = a[l];
-		a[l] = a[j];
-		a[j] = temp;
-
-		qsortX(a,l,j-1);
-		qsortX(a,j+1,r);
-	}	
+	return -1;
 }
