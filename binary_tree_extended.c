@@ -2,7 +2,10 @@
 #include<stdlib.h>
 #include<string.h>
 #include<ctype.h>
+<<<<<<< HEAD
+=======
 
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 #define MAXWORD			100
 #define BUFFSIZE		 20
 #define YES				  1
@@ -111,6 +114,71 @@ int getword(char *word,int lim)
 	{
 		*w++ = c;
 	}
+<<<<<<< HEAD
+	if(isalpha(c) || c == '_' || c == '#')
+	{
+		for(;--lim > 0;w++)
+		{
+			if(!isalnum(*w = getchX()) && *w != '_')
+			{
+				ungetchX(*w);
+				break;
+			}
+		}
+	}
+	else if(c == '\'' || c == '"')
+	{
+		for(;--lim > 0;w++)
+		{
+			if((*w = getchX()) == '\\')
+			{
+				*w++ = getchX();
+			}
+			else if(*w == c)
+			{
+				w++;
+				break;
+			}
+			else if(*w == EOF)
+			{
+				break;
+			}
+		}
+	}
+	else if (c == '/')
+	{
+		if((d = getchX()) == '*')
+		{
+			c = comment();
+		}
+		else
+		{
+			ungetchX(d);
+		}
+	}
+	*w = '\0';
+	return c;
+}
+
+
+int comment()
+{
+	int c;
+	while((c = getchX()) != EOF)
+	{
+		if(c == '*')
+		{
+			if((c = getchX()) == '/')
+				break;
+			else
+				ungetchX(c);
+		}
+	}
+	return c;
+}
+
+
+=======
 	if(!isalpha(c))
 	{
 		*w = '\0';
@@ -129,6 +197,7 @@ int getword(char *word,int lim)
 	return word[0];
 }
 
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 TNODE *t_alloc()
 {
 	return (TNODE*)malloc(sizeof(TNODE));

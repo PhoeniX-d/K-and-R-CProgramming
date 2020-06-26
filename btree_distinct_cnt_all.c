@@ -56,10 +56,7 @@ int main()
 	
 	while(getword(word,MAXWORD) != EOF )
 	{
-		if(isalpha(word[0]))
-		{
-			root = addtree(root, word);
-		}
+		root = addtree(root, word);
 	}
 	treestore(root);
 	sort_dec();
@@ -103,7 +100,6 @@ int getword(char *word,int limit)
 {
 	int c;
 	char *w = word;
-
 	while(isspace(c = getchX()))
 		;
 
@@ -114,14 +110,14 @@ int getword(char *word,int limit)
 	if(!isalpha(c))
 	{
 		*w = '\0';
-		return word[0];
+		return c;
 	}
 
 	while(--limit > 0)
 	{
 		if(!isalnum(*w = getchX()))
 		{
-			ungetchX(*w);
+			ungetchX(*w);		
 			break;
 		}
 		w++;
