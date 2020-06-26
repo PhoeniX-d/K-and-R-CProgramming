@@ -60,7 +60,11 @@ int getword(char *word,int limit)
 
 	while(--limit > 0)
 	{
+<<<<<<< HEAD
 		if(!isalnum(*w = getchX()) && *w != '_')
+=======
+		if(!isalnum(*w = getchX()))
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 		{
 			ungetchX(*w);
 			break;

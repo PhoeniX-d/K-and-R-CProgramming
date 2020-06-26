@@ -106,7 +106,11 @@ int getword(char *word,int lim)
 	{
 		*w++ = c;
 	}
+<<<<<<< HEAD
 	if(isalpha(c) || c == '_' || c == '#')
+=======
+	if(!isalpha(c) || c == '_' || c == '#')
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 	{
 		printf("Inside '_' '#'()\n");
 		for(;--lim > 0;w++)
