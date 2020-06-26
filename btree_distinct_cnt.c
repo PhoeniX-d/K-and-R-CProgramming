@@ -5,7 +5,7 @@
 
 #define MAXWORD			100 /*max word length*/
 #define BUFFSIZE		 20 /*buffer size for unwanted characters*/
-#define NDISTINCT	   1000	/*mx distinct count*/ 
+#define NDISTINCT	   1000	/*max distinct count*/ 
 
 /*structure of tree note*/
 typedef struct tnode
@@ -16,8 +16,8 @@ typedef struct tnode
 	struct tnode	*right;	/*ptr to right child*/
 }TNODE;						/*typedef to struct tnode*/
 
-TNODE *list[NDISTINCT];
-int noftn = 0;
+TNODE  *list[NDISTINCT];
+int 	noftn = 0;
 int 	bufp = 0;
 int 	buf[BUFFSIZE];
 

@@ -1,24 +1,10 @@
-int char float double
-int char float double
-int char float double
-int char float double
-int char float double
-int char float double
-int char float double
-
-int char float double
-int char float double
-int char float double
-int char float double
-
-int char float double
-int char float double
-int char float double
-int char float double
-int char float double
-
-int char float double
-int char float double
-int char float double
-int char float double
-Inside getword()
+#define EXTERNAL1 	10101
+#define EXTERNAL2 	10102
+#define EXTERNAL3 	10103
+#define EXTERNAL4 	10104
+#define EXTERNAL5	10105
+#define EXTERNAL6 	10106
+#define EXTERNAL7 	10107
+#define EXTERNAL8 	10108
+#define EXTERNAL9 	10109
+#define EXTERNAL10 	10110
