@@ -56,7 +56,18 @@ int main()
 	
 	while(getword(word,MAXWORD) != EOF )
 	{
+<<<<<<< HEAD
 		root = addtree(root, word);
+=======
+<<<<<<< HEAD
+		root = addtree(root, word);
+=======
+		if(isalpha(word[0]))
+		{
+			root = addtree(root, word);
+		}
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
+>>>>>>> 79b9204c7406d7d4515b4727f61083bd8a6eb919
 	}
 	treestore(root);
 	sort_dec();
@@ -100,25 +111,53 @@ int getword(char *word,int limit)
 {
 	int c;
 	char *w = word;
+<<<<<<< HEAD
+=======
+
+<<<<<<< HEAD
+	while(isspace(c = getchX()));
+	if(c != EOF)
+	{
+	 	*w = c;
+		w++;
+=======
+>>>>>>> 79b9204c7406d7d4515b4727f61083bd8a6eb919
 	while(isspace(c = getchX()))
 		;
 
 	if(c != EOF)
 	{
 		*w++ = c;
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 	}
 	if(!isalpha(c))
 	{
 		*w = '\0';
+<<<<<<< HEAD
 		return c;
+=======
+<<<<<<< HEAD
+		return c;
+=======
+		return word[0];
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
+>>>>>>> 79b9204c7406d7d4515b4727f61083bd8a6eb919
 	}
 
 	while(--limit > 0)
 	{
 		if(!isalnum(*w = getchX()))
 		{
+<<<<<<< HEAD
 			ungetchX(*w);		
+=======
+			ungetchX(*w);
+<<<<<<< HEAD
+			break;			
+=======
+>>>>>>> 79b9204c7406d7d4515b4727f61083bd8a6eb919
 			break;
+>>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 		}
 		w++;
 	}
