@@ -2,6 +2,7 @@
 #include<fcntl.h>
 #define OUT 0
 #define IN  1
+
 int main()
 {
 	char ch;
