@@ -197,7 +197,7 @@ void treeprintx(TNODE *p)
 	}
 }
 
-/* to igonre my noisy words,its among them then just ignore them */
+/* to igonre my noisy words,if its among them then just ignore them */
 int noisyword(char *w)
 {
 	static char *nw[] = {"a","an","and","are","in","is","of","or","that","the","this","to"};
