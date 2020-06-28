@@ -11,7 +11,7 @@ typedef char*           String;
 typedef struct nlist    *Nlistptr;
 typedef struct nlist						/* table entrys */
 {
-    Nlistptr            next;			/*next entry in chain*/
+    Nlistptr        next;			/*next entry in chain*/
     String			name;			/* defined name*/
     String 			defn;			/* replacement text*/
 }Nlist;
@@ -84,7 +84,7 @@ void getdef()
                     break;  /* end of definition */ 
             }
             def[i] = '\0';
-            if(1 <= 0)
+            if(i <= 0)
                 error('\n',"getdef : incomplete define");
             else
                 install(name,def);

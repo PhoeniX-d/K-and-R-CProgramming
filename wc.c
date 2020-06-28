@@ -1,9 +1,17 @@
+<<<<<<< HEAD
 
 #include<stdio.h>
 #include<fcntl.h>
 #define OUT 0
 #define IN  1
 
+=======
+#include<stdio.h>
+#include<fcntl.h>
+#define OUT 0
+#define IN  1
+
+>>>>>>> 6ba779bdab0cb49232fdcf6a89ee6ace7189fa7a
 int main()
 {
 	char ch;
@@ -26,4 +34,8 @@ int main()
 	}
 	printf("%d %d %d",nc,nw,nl);
 	return 0;
+<<<<<<< HEAD
 }
+=======
+}
+>>>>>>> 6ba779bdab0cb49232fdcf6a89ee6ace7189fa7a
