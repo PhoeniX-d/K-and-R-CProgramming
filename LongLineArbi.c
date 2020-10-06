@@ -1,44 +1,41 @@
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-#include<stdio.h>
-#define MAXLINE 	 100
+#include <stdio.h>
+#define MAXLINE 100
 
 int getlinex(char line[]);
-void copy(char to[],char from[]);
+void copy(char to[], char from[]);
 int main()
 {
-	
-	int len = 0,max = 0;
+
+	int len = 0, max = 0;
 	char line[MAXLINE];
 	char longest[MAXLINE];
 
-	while((len = getlinex(line)) > 0)
+	while ((len = getlinex(line)) > 0)
 	{
-		printf("%d , %d ",len,line);
-		if(len > max)
+		printf("%d , %d ", len, line);
+		if (len > max)
 		{
 			max = len;
-			copy(longest,line);
+			copy(longest, line);
 		}
 	}
 	if (max > 0)
-		printf("%s",longest);
+		printf("%s", longest);
 	return 0;
 }
 
 int getlinex(char line[])
 {
-	int i = 0,c = 0,j = 0;
-	for(i = 0; (c = getchar()) !=EOF && (c != '\n'); i++)
+	int i = 0, c = 0, j = 0;
+	for (i = 0; (c = getchar()) != EOF && (c != '\n'); i++)
 	{
-		if(i < (MAXLINE - 2))
+		if (i < (MAXLINE - 2))
 		{
 			line[j] = c;
 			j++;
 		}
 	}
-	if(c == '\n')
+	if (c == '\n')
 	{
 		line[j] = c;
 		i++;
@@ -48,129 +45,12 @@ int getlinex(char line[])
 	return i;
 }
 
-void copy(char to[],char from[])
+void copy(char to[], char from[])
 {
 	int i = 0;
-	while(from[i] != '\0')
+	while (from[i] != '\0')
 	{
 		to[i] = from[i];
 		i++;
 	}
-=======
->>>>>>> 79b9204c7406d7d4515b4727f61083bd8a6eb919
-#include<stdio.h>
-#define MAXLINE 	 100
-
-int getlinex(char line[]);
-void copy(char to[],char from[]);
-int main()
-{
-	
-	int len = 0,max = 0;
-	char line[MAXLINE];
-	char longest[MAXLINE];
-
-	while((len = getlinex(line)) > 0)
-	{
-		printf("%d , %d ",len,line);
-		if(len > max)
-		{
-			max = len;
-			copy(longest,line);
-		}
-	}
-	if (max > 0)
-		printf("%s",longest);
-	return 0;
-}
-
-int getlinex(char line[])
-{
-	int i = 0,c = 0,j = 0;
-	for(i = 0; (c = getchar()) !=EOF && (c != '\n'); i++)
-	{
-		if(i < (MAXLINE - 2))
-		{
-			line[j] = c;
-			j++;
-		}
-	}
-	if(c == '\n')
-	{
-		line[j] = c;
-		i++;
-		j++;
-	}
-	line[j] = '\0';
-	return i;
-}
-
-void copy(char to[],char from[])
-{
-	int i = 0;
-	while(from[i] != '\0')
-	{
-		to[i] = from[i];
-		i++;
-	}
-<<<<<<< HEAD
-=======
-#include<stdio.h>
-#define MAXLINE 	 100
-
-int getlinex(char line[]);
-void copy(char to[],char from[]);
-int main()
-{
-	
-	int len = 0,max = 0;
-	char line[MAXLINE];
-	char longest[MAXLINE];
-
-	while((len = getlinex(line)) > 0)
-	{
-		printf("%d , %d ",len,line);
-		if(len > max)
-		{
-			max = len;
-			copy(longest,line);
-		}
-	}
-	if (max > 0)
-		printf("%s",longest);
-	return 0;
-}
-
-int getlinex(char line[])
-{
-	int i = 0,c = 0,j = 0;
-	for(i = 0; (c = getchar()) !=EOF && (c != '\n'); i++)
-	{
-		if(i < (MAXLINE - 2))
-		{
-			line[j] = c;
-			j++;
-		}
-	}
-	if(c == '\n')
-	{
-		line[j] = c;
-		i++;
-		j++;
-	}
-	line[j] = '\0';
-	return i;
-}
-
-void copy(char to[],char from[])
-{
-	int i = 0;
-	while(from[i] != '\0')
-	{
-		to[i] = from[i];
-		i++;
-	}
-=======
->>>>>>> 79b9204c7406d7d4515b4727f61083bd8a6eb919
->>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 }

@@ -1,43 +1,39 @@
-#include<stdio.h>
-#include<stdlib.h>
-#include<string.h>
-#include<ctype.h>
-<<<<<<< HEAD
-=======
-
->>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
-#define MAXWORD			100
-#define BUFFSIZE		 20
-#define YES				  1
-#define NO				  0
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <ctype.h>
+#define MAXWORD 100
+#define BUFFSIZE 20
+#define YES 1
+#define NO 0
 typedef struct tnode
 {
-	char			*word;
-	int				match;
-	struct tnode	*left;
-	struct tnode	*right;
-}TNODE;
+	char *word;
+	int match;
+	struct tnode *left;
+	struct tnode *right;
+} TNODE;
 
-int 	bufp = 0;
-int 	buf[BUFFSIZE];
-int 	getchX();
-void 	ungetchX(int);
-int		compares(char*, TNODE*, int, int*);
-TNODE 	*addtreex(TNODE*, char*, int, int*);
-TNODE 	*t_alloc();
-int		getword(char*,int);
-int 	comment();
-void 	treeprintx(TNODE*);
-char*	strdupX(char*);
+int bufp = 0;
+int buf[BUFFSIZE];
+int getchX();
+void ungetchX(int);
+int compares(char *, TNODE *, int, int *);
+TNODE *addtreex(TNODE *, char *, int, int *);
+TNODE *t_alloc();
+int getword(char *, int);
+int comment();
+void treeprintx(TNODE *);
+char *strdupX(char *);
 
 int main(int argc, char const *argv[])
 {
-	TNODE*	root = NULL;
-	char 	word[MAXWORD];
+	TNODE *root = NULL;
+	char word[MAXWORD];
 	int found = NO;
 	int num;
 
-	if(--argc && (*++argv)[0] == '-')
+	if (--argc && (*++argv)[0] == '-')
 	{
 		num = atoi(argv[0] + 1);
 	}
@@ -45,10 +41,10 @@ int main(int argc, char const *argv[])
 	{
 		num = 2;
 	}
-	
-	while(getword(word,MAXWORD) != EOF )
+
+	while (getword(word, MAXWORD) != EOF)
 	{
-		if(isalpha(word[0]) && strlen(word) >= num)
+		if (isalpha(word[0]) && strlen(word) >= num)
 		{
 			root = addtreex(root, word, num, &found);
 		}
@@ -63,20 +59,20 @@ TNODE *addtreex(TNODE *p, char *w, int num, int *found)
 {
 	int condition;
 
-	if( p == NULL )
+	if (p == NULL)
 	{
 		p = t_alloc();
 		p->word = strdupX(w);
 		p->match = *found;
 		p->left = p->right = NULL;
 	}
-	else if((condition = compares(w,p,num,found)) < 0)
+	else if ((condition = compares(w, p, num, found)) < 0)
 	{
-		p->left = addtreex(p->left,w,num,found);
+		p->left = addtreex(p->left, w, num, found);
 	}
-	else if(condition > 0)
+	else if (condition > 0)
 	{
-		p->right = addtreex(p->right,w,num,found);
+		p->right = addtreex(p->right, w, num, found);
 	}
 	return p;
 }
@@ -86,9 +82,9 @@ int compares(char *s, TNODE *p, int num, int *found)
 	int i = 0;
 	char *t = p->word;
 
-	while(*s == *t)
+	while (*s == *t)
 	{
-		if(*s == '\0')
+		if (*s == '\0')
 		{
 			return 0;
 		}
@@ -96,7 +92,7 @@ int compares(char *s, TNODE *p, int num, int *found)
 		i++;
 		s++;
 	}
-	if( i >= num)
+	if (i >= num)
 	{
 		*found = YES;
 		p->match = YES;
@@ -104,42 +100,42 @@ int compares(char *s, TNODE *p, int num, int *found)
 	return *s - *t;
 }
 
-int getword(char *word,int lim)
+int getword(char *word, int lim)
 {
-	int c,d;
+	int c, d;
 	char *w = word;
-	while(isspace(c = getchX()))
+	while (isspace(c = getchX()))
 		;
-	if(c != EOF)
+	if (c != EOF)
 	{
 		*w++ = c;
 	}
 <<<<<<< HEAD
-	if(isalpha(c) || c == '_' || c == '#')
+	if (isalpha(c) || c == '_' || c == '#')
 	{
-		for(;--lim > 0;w++)
+		for (; --lim > 0; w++)
 		{
-			if(!isalnum(*w = getchX()) && *w != '_')
+			if (!isalnum(*w = getchX()) && *w != '_')
 			{
 				ungetchX(*w);
 				break;
 			}
 		}
 	}
-	else if(c == '\'' || c == '"')
+	else if (c == '\'' || c == '"')
 	{
-		for(;--lim > 0;w++)
+		for (; --lim > 0; w++)
 		{
-			if((*w = getchX()) == '\\')
+			if ((*w = getchX()) == '\\')
 			{
 				*w++ = getchX();
 			}
-			else if(*w == c)
+			else if (*w == c)
 			{
 				w++;
 				break;
 			}
-			else if(*w == EOF)
+			else if (*w == EOF)
 			{
 				break;
 			}
@@ -147,7 +143,7 @@ int getword(char *word,int lim)
 	}
 	else if (c == '/')
 	{
-		if((d = getchX()) == '*')
+		if ((d = getchX()) == '*')
 		{
 			c = comment();
 		}
@@ -160,15 +156,14 @@ int getword(char *word,int lim)
 	return c;
 }
 
-
 int comment()
 {
 	int c;
-	while((c = getchX()) != EOF)
+	while ((c = getchX()) != EOF)
 	{
-		if(c == '*')
+		if (c == '*')
 		{
-			if((c = getchX()) == '/')
+			if ((c = getchX()) == '/')
 				break;
 			else
 				ungetchX(c);
@@ -179,14 +174,14 @@ int comment()
 
 
 =======
-	if(!isalpha(c))
+	if (!isalpha(c))
 	{
 		*w = '\0';
 		return c;
 	}
-	while(--lim > 0)
+	while (--lim > 0)
 	{
-		if(!isalnum(*w = getchX()))
+		if (!isalnum(*w = getchX()))
 		{
 			ungetchX(*w);
 			break;
@@ -200,28 +195,28 @@ int comment()
 >>>>>>> 4b0d632f0ae60fef75da6c73052e705dbc271f56
 TNODE *t_alloc()
 {
-	return (TNODE*)malloc(sizeof(TNODE));
+	return (TNODE *)malloc(sizeof(TNODE));
 }
 
 char *strdupX(char *s)
 {
 	char *p = NULL;
 	p = (char *)malloc(strlen(s) + 1);
-	if(p != NULL)
+	if (p != NULL)
 	{
-		strcpy(p,s);
+		strcpy(p, s);
 	}
 	return p;
 }
 
 void treeprintx(TNODE *p)
 {
-	if(p != NULL)
+	if (p != NULL)
 	{
 		treeprintx(p->left);
-		if(p->match == YES)
+		if (p->match == YES)
 		{
-			printf("%4d %15s\n",p->match, p->word);
+			printf("%4d %15s\n", p->match, p->word);
 		}
 		treeprintx(p->right);
 	}
@@ -234,10 +229,10 @@ int getchX()
 
 void ungetchX(int c)
 {
-	if(bufp >= BUFFSIZE)
+	if (bufp >= BUFFSIZE)
 	{
 		printf("Ungetch :too many arg\n");
 	}
-	else 
+	else
 		buf[bufp++] = c;
 }

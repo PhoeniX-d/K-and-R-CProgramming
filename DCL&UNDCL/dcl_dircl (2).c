@@ -1,14 +1,19 @@
-#include<stdio.h>
-#include<string.h>
-#include<ctype.h>
+#include <stdio.h>
+#include <string.h>
+#include <ctype.h>
 
-#define MAXTOKEN	100
-#define BUFFSIZE 	100
+#define MAXTOKEN 100
+#define BUFFSIZE 100
 
 char buf[BUFFSIZE];
 int bufp = 0;
 
-enum {NAME,PARENS,BRACKETS};
+enum
+{
+	NAME,
+	PARENS,
+	BRACKETS
+};
 void dirdcl();
 void dcl();
 int gettoken();
@@ -23,11 +28,11 @@ int getchX();
 void dcl()
 {
 	int ns;
-	for(ns = 0;gettoken() == '*';)
+	for (ns = 0; gettoken() == '*';)
 		ns++;
 	dirdcl();
-	while(ns-- > 0)
-		strcat(out," pointer to");
+	while (ns-- > 0)
+		strcat(out, " pointer to");
 }
 
 int getchX()
@@ -36,49 +41,49 @@ int getchX()
 }
 void ungetchX(int c)
 {
-	if(bufp >= BUFFSIZE)
+	if (bufp >= BUFFSIZE)
 	{
 		printf("Ungetch :too many arg\n");
 	}
-	else 
+	else
 		buf[bufp++] = c;
 }
 void dirdcl()
 {
 	int type;
-	if(tokentype == '{')
+	if (tokentype == '{')
 	{
 		dcl();
-		if(tokentype != '}')
+		if (tokentype != '}')
 			printf("Error : missing }\n");
 	}
-	else if(tokentype == NAME)
-		strcpy(name,token);
+	else if (tokentype == NAME)
+		strcpy(name, token);
 	else
 		printf("Error:Expected name or (dcl)\n");
 
-	while((type = gettoken()) == PARENS || type == BRACKETS)
+	while ((type = gettoken()) == PARENS || type == BRACKETS)
 	{
-		if(type == PARENS)
-			strcat(out," function returning");
+		if (type == PARENS)
+			strcat(out, " function returning");
 		else
 		{
-			strcat(out," array");
-			strcat(out,token);
-			strcat(out," of");
+			strcat(out, " array");
+			strcat(out, token);
+			strcat(out, " of");
 		}
 	}
 }
 int main()
 {
-	while(gettoken() != EOF)
+	while (gettoken() != EOF)
 	{
-		strcpy(datatype,token);
+		strcpy(datatype, token);
 		out[0] = '\0';
 		dcl();
-		if(tokentype != '\n')
+		if (tokentype != '\n')
 			printf("Syntax Error\n");
-		printf("%s : %s %s\n",name,out,datatype);
+		printf("%s : %s %s\n", name, out, datatype);
 	}
 	return 0;
 }
@@ -88,14 +93,14 @@ int gettoken()
 	int c;
 	char *p = token;
 
-	while((c = getchX()) == ' ' || c == '\t')
+	while ((c = getchX()) == ' ' || c == '\t')
 		;
-	if(c == '(')
+	if (c == '(')
 	{
 		printf("is (\n");
-		if((c = getchX()) == ')')
+		if ((c = getchX()) == ')')
 		{
-	 		strcpy(token,"()");
+			strcpy(token, "()");
 			return tokentype = PARENS;
 		}
 		else
@@ -104,24 +109,24 @@ int gettoken()
 			return tokentype = '{';
 		}
 	}
-	else if(c == '[')
+	else if (c == '[')
 	{
 		printf("is [\n");
 
-	 	for(*p++ = c; (*p++ = getchX()) != ']';)
-	 		;
-	 	*p = '\0';
-	 	return tokentype = BRACKETS;
-	} 
-	else if(isalpha(c)) /* is alphabet or not*/
-	{ 
+		for (*p++ = c; (*p++ = getchX()) != ']';)
+			;
+		*p = '\0';
+		return tokentype = BRACKETS;
+	}
+	else if (isalpha(c)) /* is alphabet or not*/
+	{
 		printf("Alphabetical\n");
-	 	for(*p++ = c; isalnum(c = getchX());)/* is alphanumeric or not*/
-	 	{
-	 		printf("is alphanumeric\n");
-	 		*p++ = c;
-	 	}
-		
+		for (*p++ = c; isalnum(c = getchX());) /* is alphanumeric or not*/
+		{
+			printf("is alphanumeric\n");
+			*p++ = c;
+		}
+
 		*p = '\0';
 		ungetchX(c);
 		return tokentype = NAME;
